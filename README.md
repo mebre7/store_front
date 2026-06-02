@@ -1,6 +1,6 @@
 # Storefront
 
-Django REST Framework storefront with a Vite/React customer app for local development.
+A simple e-commerce storefront where customers can browse products, filter by collection, add items to a cart, and place orders. Built with a Django REST Framework backend and a React frontend.
 
 ## Backend
 
