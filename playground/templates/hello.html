@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Page</title>
+</head>
+<body>
+    {% if name %}
+        <h1>Hello {{ name }}!</h1>
+    {% else %}
+        <h1>Hello, World</h1>
+    {% endif %}
+        <p>Welcome to the Hello Page.</p>
+    <h1>This is a table from the Collection model with Product Count column added.</h1>
+    <table>
+            <tr>
+                <th>ID</th>
+                <th>Featured Product</th>
+                <th>Title</th>
+                <th>Product Count</th>
+            </tr>
+            {% for pro in counts %}
+                <tr>
+                    <td>{{ pro.id }}</td>
+                    <td>{{ pro.featured_product }}</td>
+                    <td>{{ pro.title }}</td>
+                    <td>{{ pro.product_count }}</td>
+                </tr>
+            {% endfor %}
+
+        </table>
+    {{ product_tag }}
+
+     <br>
+    <h1>This is a table from the Tag model.</h1>
+    <br>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Label</th>
+            <th>Product (ID)</th>
+        </tr>
+        {% for tagging in tags %}
+            <tr>
+                <td>{{ tagging.id }}</td>
+                <td>{{ tagging.tag.label }}</td>
+                <td>{{ tagging.object_id }}</td>
+            </tr>
+        {% empty %}
+                No tag
+        {% endfor %}
+    </table>
+
+    <br>
+{#    {{ count }}#}
+     <h1>Table from Database</h1>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Collection</th>
+            <th>Promotion</th>
+            <th>Unit Price</th>
+            <th>Discount (%)</th>
+            <th>Discounted Price</th>
+        </tr>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.title }}</td>
+                <td>{{ product.collection.title }}</td>
+                <td>
+                    {% for promo in product.promotion.all %}
+                        {{ promo.description }}
+                    {% empty %}
+                        No promotion
+                    {% endfor %}
+                </td>
+                <td>{{ product.unit_price }}</td>
+                <td>
+                    {% for promo in product.promotion.all %}
+                        {{ promo.discount }}
+                    {% empty %}
+                        No discount
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ product.discounted_price|floatformat:3 }}
+                </td>
+            </tr>    
+            {% endfor %}
+    </table>
+    <h1>Last 5 orders with their customer and items</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Placed at</th>
+            <th>Payment Status</th>
+            <th>Customer</th>
+            <th>Product</th>
+        </tr>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.place_at}}</td>
+                <td>{{ order.payment_status }}</td>
+                <td>{{ order.customer.first_name }}</td>
+                <td>
+                    {% for item in order.orderitem_set.all %}
+                        {{ item.product.title }}
+                        <!--why didn't we directly use order.orderitem_set.product.title?-->
+                        <!--because orderitem_set is a queryset not a single object, so we need to iterate over it to get the product title-->
+                    {% empty %}
+                        No items
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
